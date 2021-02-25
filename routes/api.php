@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,4 +30,10 @@ Route::group(['prefix' => 'products'], function () {
         Route::put('', [ProductController::class, "edit"]);
         Route::delete('', [ProductController::class, "delete"]);
     });
+});
+
+
+
+Route::group(['prefix' => 'product-categories'], function () {
+    Route::get('/', [ProductCategoryController::class, 'all']);
 });

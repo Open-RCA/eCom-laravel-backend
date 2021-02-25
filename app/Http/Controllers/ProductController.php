@@ -12,6 +12,7 @@ class ProductController extends Controller
 {
     public function all(): JsonResponse
     {
+
         return response()->json(Product::all());
     }
 
