@@ -43,3 +43,15 @@ Route::group(['prefix' => 'product-categories'], function () {
         Route::delete('', [ProductCategoryController::class, 'delete']);
     });
 });
+
+
+
+Route::group(['prefix' => 'product-sub-categories'], function () {
+    Route::get('/', [ProductCategoryController::class, 'all']);
+    Route::post('/', [ProductCategoryController::class, 'create']);
+    Route::group(['prefix' => '{productSubCategory}'], function() {
+        Route::get('', [ProductCategoryController::class, 'show']);
+        Route::put('', [ProductCategoryController::class, 'edit']);
+        Route::delete('', [ProductCategoryController::class, 'delete']);
+    });
+});

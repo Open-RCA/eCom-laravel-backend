@@ -13,7 +13,7 @@ class ProductCategoryController extends Controller
     public function all(): JsonResponse
     {
         try {
-            $productCategories = ProductCategory::query()->paginate(5);
+            $productCategories = ProductCategory::query()->paginate(20);
             return response()->json($productCategories);
         }
         catch (Exception $exception) {
@@ -34,7 +34,7 @@ class ProductCategoryController extends Controller
 
     public function create(Request $request): JsonResponse {
         $validator = Validator::make($request->json()->all(), [
-            'category' => 'required|string|min:1|max:50',
+            'category' => 'required|string|min:1|max:50|unique:product_categories',
             'description' => 'required|string|min:1|max:50'
         ]);
 
@@ -54,7 +54,7 @@ class ProductCategoryController extends Controller
     {
         try {
         $validator = Validator::make($request->json()->all(), [
-            'category' => 'required|string|min:1|max:50|unique:product-categories',
+            'category' => 'required|string|min:1|max:50|unique:product_categories',
             'description' => 'required|string|min:1|max:50'
         ]);
 
