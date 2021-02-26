@@ -11,7 +11,7 @@ POST http://localhost:8000/api/product-sub-categories
 Content-Type: application/json
 
 {
-    "category": "Test1",
-    "product_category_id": "603885b976690000580150d6",
-    "description": "Te1sting"
+    "category": "Testd1",
+    "product_category_id": "603885b976690000580050d6",
+    "description": "Tes1sting"
 }
