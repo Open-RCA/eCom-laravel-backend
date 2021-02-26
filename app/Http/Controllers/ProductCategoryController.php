@@ -17,7 +17,12 @@ class ProductCategoryController extends Controller
             return response()->json($productCategories);
         }
         catch (Exception $exception) {
-            return response()->json($exception->getMessage());
+            $RESPONSE = [
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+            ];
+            return response()->json($RESPONSE);
         }
     }
 
@@ -27,50 +32,70 @@ class ProductCategoryController extends Controller
             return response()->json($productCategory);
          }
         catch (Exception $exception) {
-            return response()->json($exception->getMessage());
+            $RESPONSE = [
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+            ];
+            return response()->json($RESPONSE);
         }
     }
 
 
     public function create(Request $request): JsonResponse {
-        $validator = Validator::make($request->json()->all(), [
-            'category' => 'required|string|min:1|max:50|unique:product_categories',
-            'description' => 'required|string|min:1|max:50'
-        ]);
+        try {
+            $validator = Validator::make($request->json()->all(), [
+                'category' => 'required|string|min:1|max:50|unique:product_categories',
+                'description' => 'required|string|min:1|max:50'
+            ]);
 
-        if ($validator->fails())
-            return response()->json($validator->errors());
+            if ($validator->fails())
+                return response()->json($validator->errors());
 
 
-        $productCategory = ProductCategory::query()->create([
-            'category' => $request->json()->get('category'),
-            'description' => $request->json()->get('description')
-        ]);
+            $productCategory = ProductCategory::query()->create([
+                'category' => $request->json()->get('category'),
+                'description' => $request->json()->get('description')
+            ]);
 
-        return response()->json($productCategory);
+            return response()->json($productCategory);
+        }
+        catch (Exception $exception) {
+            $RESPONSE = [
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+            ];
+            return response()->json($RESPONSE);
+        }
     }
 
 
     public function update(Request $request, ProductCategory $productCategory): JsonResponse
     {
         try {
-        $validator = Validator::make($request->json()->all(), [
-            'category' => 'required|string|min:1|max:50|unique:product_categories',
-            'description' => 'required|string|min:1|max:50'
-        ]);
+            $validator = Validator::make($request->json()->all(), [
+                'category' => 'required|string|min:1|max:50|unique:product_categories',
+                'description' => 'required|string|min:1|max:50'
+            ]);
 
-        if ($validator->fails())
-            return response()->json($validator->errors());
+            if ($validator->fails())
+                return response()->json($validator->errors());
 
-        $productCategory = ProductCategory::query()->update([
-            'category' => $request->json()->get('category'),
-            'description' => $request->json()->get('description')
-        ]);
+            $productCategory = ProductCategory::query()->update([
+                'category' => $request->json()->get('category'),
+                'description' => $request->json()->get('description')
+            ]);
 
-        return response()->json($productCategory);
+            return response()->json($productCategory);
         }
         catch (Exception $exception) {
-            return response()->json($exception->getMessage());
+            $RESPONSE = [
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+            ];
+            return response()->json($RESPONSE);
         }
     }
 
@@ -80,7 +105,12 @@ class ProductCategoryController extends Controller
         try {
             return response()->json($productCategory->delete());
         } catch (Exception $exception) {
-            return response()->json($exception->getMessage());
+            $RESPONSE = [
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+            ];
+            return response()->json($RESPONSE);
         }
     }
 

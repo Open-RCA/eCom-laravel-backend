@@ -14,11 +14,16 @@ class ProductSubCategoryController extends Controller
     public function all(): JsonResponse
     {
         try {
-            $productSubCategories = ProductSubCategory::query()->paginate(20);
+            $productSubCategories = ProductSubCategory::with('product_category_id')->get();
             return response()->json($productSubCategories);
         }
         catch (Exception $exception) {
-            return response()->json($exception->getMessage());
+            $RESPONSE = [
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+            ];
+            return response()->json($RESPONSE);
         }
     }
 
@@ -28,7 +33,12 @@ class ProductSubCategoryController extends Controller
             return response()->json($productSubCategory);
         }
         catch (Exception $exception) {
-            return response()->json($exception->getMessage());
+            $RESPONSE = [
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+            ];
+            return response()->json($RESPONSE);
         }
     }
 
@@ -53,7 +63,12 @@ class ProductSubCategoryController extends Controller
             return response()->json($productSubCategory);
         }
         catch (Exception $exception) {
-            return response()->json($exception->getMessage());
+            $RESPONSE = [
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+            ];
+            return response()->json($RESPONSE);
         }
 
     }
@@ -80,7 +95,12 @@ class ProductSubCategoryController extends Controller
             return response()->json($productCategory);
         }
         catch (Exception $exception) {
-            return response()->json($exception->getMessage());
+            $RESPONSE = [
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+            ];
+            return response()->json($RESPONSE);
         }
     }
 
@@ -90,7 +110,12 @@ class ProductSubCategoryController extends Controller
         try {
             return response()->json($productSubCategory->delete());
         } catch (Exception $exception) {
-            return response()->json($exception->getMessage());
+            $RESPONSE = [
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+            ];
+            return response()->json($RESPONSE);
         }
     }
 
@@ -98,3 +123,4 @@ class ProductSubCategoryController extends Controller
 
 
 }
+

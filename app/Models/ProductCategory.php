@@ -17,4 +17,8 @@ class ProductCategory extends Eloquent
 
     public $timestamps = true;
 
+    public function productSubCategories() {
+        return $this->hasMany(ProductSubCategory::class);
+    }
+
 }
