@@ -7,10 +7,11 @@ GET http://localhost:8000/api/product-categories/603877d676690000580050b8
 
 ###
 
-POST http://localhost:8000/api/product-categories
+POST http://localhost:8000/api/product-sub-categories
 Content-Type: application/json
 
 {
-    "category": "Test",
-    "description": "Testing"
+    "category": "Test1",
+    "product_category_id": "603885b976690000580150d6",
+    "description": "Te1sting"
 }

@@ -41,6 +41,7 @@ class ProductCategoryController extends Controller
         if ($validator->fails())
             return response()->json($validator->errors());
 
+
         $productCategory = ProductCategory::query()->create([
             'category' => $request->json()->get('category'),
             'description' => $request->json()->get('description')

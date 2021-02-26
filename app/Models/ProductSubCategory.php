@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
 
-class ProductSubCategory extends Model
+
+class ProductSubCategory extends Eloquent
 {
     use HasFactory;
 
@@ -16,4 +17,8 @@ class ProductSubCategory extends Model
     ];
 
     public $timestamps = true;
+
+    public function productCategory() {
+        return $this->belongsTo(ProductCategory::class);
+    }
 }

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductCategoryController;
+use App\Http\Controllers\ProductSubCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,11 +48,11 @@ Route::group(['prefix' => 'product-categories'], function () {
 
 
 Route::group(['prefix' => 'product-sub-categories'], function () {
-    Route::get('/', [ProductCategoryController::class, 'all']);
-    Route::post('/', [ProductCategoryController::class, 'create']);
+    Route::get('/', [ProductSubCategoryController::class, 'all']);
+    Route::post('/', [ProductSubCategoryController::class, 'create']);
     Route::group(['prefix' => '{productSubCategory}'], function() {
-        Route::get('', [ProductCategoryController::class, 'show']);
-        Route::put('', [ProductCategoryController::class, 'edit']);
-        Route::delete('', [ProductCategoryController::class, 'delete']);
+        Route::get('', [ProductSubCategoryController::class, 'show']);
+        Route::put('', [ProductSubCategoryController::class, 'edit']);
+        Route::delete('', [ProductSubCategoryController::class, 'delete']);
     });
 });
