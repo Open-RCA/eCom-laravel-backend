@@ -117,6 +117,51 @@ class UserController extends Controller
     }
 
     /**
+     * Update user data.
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+
+    public function update(Request $request, User $user) {
+        /**
+        * Validate user inputs
+        * 
+        * @return \Illuminate\Http\JsonResponse
+        */
+         
+        $validator = Validator::make($request->all(), [
+             'first_name' => 'required|string|between:3,255',
+             'last_name' => 'required|string|between:3,255',
+             'username' => 'required|string|between:3,255',
+             'email' => 'required|string|email|max:255|unique:users',
+             'phone_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+             'password' => 'required|string|confirmed|min:8',
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+        
+        $user->update($request->all());
+
+        $user->save();
+
+        return response()->json([
+            'message' => 'User updated successfully',
+            'user' => $user
+        ], 200);
+    }
+
+    public function delete(User $user)
+    {
+        $user->delete();
+
+        return response()->json([
+            'message' => 'User deleted successfully'
+        ], 200);
+    }
+
+    /**
      * Get the token array structure.
      * 
      * @param string $token
@@ -133,4 +178,5 @@ class UserController extends Controller
 
 
     }
+    
 }

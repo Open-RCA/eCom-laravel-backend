@@ -33,7 +33,8 @@ Route::group([
     Route::post('/logout', [UserController::class, 'logout']);
     Route::post('/refresh', [UserController::class, 'refresh']);
     Route::get('/currentUser', [UserController::class, 'currentUser']);
-    Route::post('/update', [UserController::class, 'update']);
+    Route::post('/{user}', [UserController::class, 'update']);
+    Route::post('/{user}', [UserController::class, 'delete']);
 });
 
 Route::group(['prefix' => 'products'], function () {
