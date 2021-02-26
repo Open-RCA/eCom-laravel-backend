@@ -36,4 +36,10 @@ Route::group(['prefix' => 'products'], function () {
 
 Route::group(['prefix' => 'product-categories'], function () {
     Route::get('/', [ProductCategoryController::class, 'all']);
+    Route::post('/', [ProductCategoryController::class, 'create']);
+    Route::group(['prefix' => '{productCategory}'], function() {
+        Route::get('', [ProductCategoryController::class, 'show']);
+        Route::put('', [ProductCategoryController::class, 'edit']);
+        Route::delete('', [ProductCategoryController::class, 'delete']);
+    });
 });
