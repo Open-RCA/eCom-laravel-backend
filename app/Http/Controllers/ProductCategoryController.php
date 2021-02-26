@@ -42,6 +42,20 @@ class ProductCategoryController extends Controller
     }
 
 
+    public function getSubCategories(ProductCategory  $productCategory): JsonResponse
+    {
+        try {
+            return response()->json($productCategory::with('productSubCategories')->get());
+        }
+        catch (Exception $exception) {
+            $RESPONSE = [
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+            ];
+            return response()->json($RESPONSE);
+        }
+    }
     public function create(Request $request): JsonResponse {
         try {
             $validator = Validator::make($request->json()->all(), [

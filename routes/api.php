@@ -38,6 +38,7 @@ Route::group(['prefix' => 'products'], function () {
 Route::group(['prefix' => 'product-categories'], function () {
     Route::get('/', [ProductCategoryController::class, 'all']);
     Route::post('/', [ProductCategoryController::class, 'create']);
+    Route::get('/sub-categories/{productCategory}', [ProductCategoryController::class, 'getSubCategories']);
     Route::group(['prefix' => '{productCategory}'], function() {
         Route::get('', [ProductCategoryController::class, 'show']);
         Route::put('', [ProductCategoryController::class, 'edit']);

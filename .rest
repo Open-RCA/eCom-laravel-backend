@@ -1,4 +1,4 @@
-GET http://localhost:8000/api/product-sub-categories
+GET http://localhost:8000/api/product-categories/sub-categories/603885b976690000580050d6
 
 
 ###
