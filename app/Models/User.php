@@ -4,12 +4,21 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
+
+use Tymon\JWTAuth\Contracts\JWTSubject;
+
+class User extends Eloquent implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract, JWTSubject
 {
-    use HasFactory, Notifiable;
+    use Authenticatable, Authorizable, CanResetPassword, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -17,9 +26,14 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
+        'username',
         'email',
+        'phone_number',
         'password',
+        'profile_picture',
+        'status'
     ];
 
     /**
@@ -29,6 +43,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
+        'status',
         'remember_token',
     ];
 
@@ -40,4 +55,23 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT
+     * 
+     * @return mixed
+     */
+    public function getJWTIdentifier(){
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT
+     * 
+     * @return array
+     */
+    public function getJWTCustomClaims(){
+        return [];
+    }
+
 }

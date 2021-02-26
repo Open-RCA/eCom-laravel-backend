@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "ext-json": "*",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
@@ -16,7 +17,7 @@
         "laravel/framework": "^8.12",
         "laravel/telescope": "^4.4",
         "laravel/tinker": "^2.5",
-        "ext-json": "*"
+        "tymon/jwt-auth": "dev-develop#34d8e48 as 1.0.0-rc.3.2"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
