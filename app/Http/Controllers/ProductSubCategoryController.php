@@ -14,7 +14,7 @@ class ProductSubCategoryController extends Controller
     public function all(): JsonResponse
     {
         try {
-            $productSubCategories = ProductSubCategory::with('product_category_id')->get();
+            $productSubCategories = ProductSubCategory::with('productCategory')->get();
             return response()->json($productSubCategories);
         }
         catch (Exception $exception) {

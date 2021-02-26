@@ -13,7 +13,7 @@ class ProductCategoryController extends Controller
     public function all(): JsonResponse
     {
         try {
-            $productCategories = ProductCategory::query()->paginate(20);
+            $productCategories = ProductCategory::all();
             return response()->json($productCategories);
         }
         catch (Exception $exception) {
