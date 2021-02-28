@@ -17,11 +17,18 @@ class Product extends Eloquent
         'quantity'
     ];
 
+    protected $hidden = [
+        'status'
+    ];
     public $timestamps = true;
 
 //    public function productImages() {
 //        return $this->hasMany();
 //    }
+
+    public function productSubCategory() {
+        return $this->belongsTo(ProductSubCategory::class);
+    }
 
 
 }

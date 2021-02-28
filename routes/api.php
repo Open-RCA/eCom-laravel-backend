@@ -71,3 +71,15 @@ Route::group(['prefix' => 'product-sub-categories'], function () {
         Route::delete('', [ProductSubCategoryController::class, 'delete']);
     });
 });
+
+
+
+Route::group(['prefix' => 'products'], function () {
+    Route::get('/', [ProductController::class, 'all']);
+    Route::post('/', [ProductController::class, 'create']);
+    Route::group(['prefix' => '{product}'], function() {
+        Route::get('', [ProductController::class, 'show']);
+        Route::put('', [ProductController::class, 'edit']);
+        Route::delete('', [ProductController::class, 'delete']);
+    });
+});

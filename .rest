@@ -1,4 +1,4 @@
-GET http://localhost:8000/api/product-categories/sub-categories/603885b976690000580050d6
+GET http://localhost:8000/api/product-sub-categories
 
 
 ###
@@ -7,11 +7,12 @@ GET http://localhost:8000/api/product-categories/603877d676690000580050b8
 
 ###
 
-POST http://localhost:8000/api/product-sub-categories
+POST http://localhost:8000/api/products
 Content-Type: application/json
 
 {
-    "category": "Testd1",
-    "product_category_id": "603885b976690000580050d6",
-    "description": "Tes1sting"
+    "name": "product",
+    "product_sub_category_id": "603885b976690000580050d6",
+    "quantity": 4,
+    "unit_price": 4000
 }
