@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\File;
-use App\Models\ProductCategory;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -136,10 +134,10 @@ class ProductController extends Controller
 
             $product->push('images', $savedFile->_id);
 
-            $product = $product->save();
+            $product->save();
             return response()->json($product);
 
-        } catch (\Mockery\Exception $exception) {
+        } catch (Exception $exception) {
             $RESPONSE = [
                 'success' => false,
                 'message' => $exception->getMessage(),
