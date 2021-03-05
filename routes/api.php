@@ -82,7 +82,7 @@ Route::group(['prefix' => 'products'], function () {
     Route::post('/', [ProductController::class, 'create']);
     Route::group(['prefix' => '{product}'], function() {
         Route::get('', [ProductController::class, 'show']);
-        Route::post('/upload-file', [FileController::class, 'save'])->name('Save');
+        Route::post('/upload-file', [ProductController::class, 'saveProductImage'])->name('Save');
         Route::put('', [ProductController::class, 'edit']);
         Route::delete('', [ProductController::class, 'delete']);
     });

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\File;
 use App\Models\ProductCategory;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Exception;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -108,28 +110,36 @@ class ProductController extends Controller
     }
 
 
-    public function saveImage(Request $request, Product $product): JsonResponse
-    {
+    public function saveProductImage(Request $request, Product $product): JsonResponse {
         try {
-            $validator = Validator::make($request->json()->all(), [
-                'name' => 'required|string|min:1|max:50|unique:product_sub_categories',
-                'product_sub_category_id' => 'required|string|exists:product_categories,_id',
-                'unit_price' => 'required|numeric|min:1',
-                'quantity' => 'required|numeric|min:1',
+            $file = $request->only('file');
+            if (empty($file)){
+                $RESPONSE = [
+                    'success' => false,
+                    'message' => 'File not found',
+                    'status' => JsonResponse::HTTP_BAD_REQUEST
+                ];
+                return response()->json($RESPONSE);
+            }
+
+
+            $validator = Validator::make($file, [
+                'file' => 'required|mimes:jpeg,jpg,png,gif|max:2048'
             ]);
 
             if ($validator->fails())
                 return response()->json($validator->errors());
 
-            $product = Product::query()->create([
-                'name' => $request->json()->get('name'),
-                'product_sub_category_id' => $request->json()->get('product_sub_category_id'),
-                'unit_price' => $request->json()->get('unit_price'),
-                'quantity' => $request->json()->get('quantity')
-            ]);
 
+            $file = $file['file'];
+            $savedFile = (new FileController)->save($file);
+
+            $product->push('images', $savedFile->_id);
+
+            $product = $product->save();
             return response()->json($product);
-        } catch (Exception $exception) {
+
+        } catch (\Mockery\Exception $exception) {
             $RESPONSE = [
                 'success' => false,
                 'message' => $exception->getMessage(),
@@ -138,7 +148,6 @@ class ProductController extends Controller
             return response()->json($RESPONSE);
         }
     }
-
     public function delete(Product $product): JsonResponse
     {
         try {
