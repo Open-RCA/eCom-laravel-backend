@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\File;
-use App\Models\Product;
-use App\Models\ProductCategory;
+use App\Models\File;;
+use Illuminate\Support\Str;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -34,13 +33,33 @@ class FileController extends Controller
             if ($validator->fails())
                 return response()->json($validator->errors());
 
-            dd($file);
+
+            $file = $file['file'];
+
+//            dd($file);
+//            dd($file->getFilename());
+            $newFile = [
+                'file_url' => 'dsfdsf',
+                'file_name' => (string) Str::uuid(),
+                'file_size_type' => 'B',
+                'file_size' => $file->getSize(),
+                'file_type' => $file->getExtension(),
+                'status' => 'SAVED'
+            ];
+//
+            dd($newFile);
+//                        dd($newFile);
 
 
-            $file = File::query()->create([
-                'category' => $request->json()->get('category'),
-                'description' => $request->json()->get('description')
-            ]);
+
+//            $newFile = File::query()->create([
+//                'file_url' => 'dsfdsf',
+//                'file_name' => $file->originalName,
+//                'file_size' =>,
+//                'file_size_type' =>,
+//                'file_type' =>,
+//                'status' =>
+//            ]);
 
 
         } catch (Exception $exception) {
