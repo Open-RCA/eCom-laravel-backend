@@ -38,29 +38,21 @@ class FileController extends Controller
 
 //            dd($file);
 //            dd($file->getFilename());
-            $newFile = [
-                'file_url' => 'dsfdsf',
-                'file_name' => ((string) Str::uuid()) .  "." . $file->getExtension(),
+
+
+
+            $fileName = ((string) Str::uuid()) .  "." . 'png';
+
+            $newFile = File::query()->create([
+                'file_url' => '/storage/' .  $file->storeAs('images', $fileName, 'public'),
+                'file_name' => $fileName,
                 'file_size_type' => 'B',
                 'file_size' => $file->getSize(),
                 'file_type' => $file->getExtension(),
                 'status' => 'SAVED'
-            ];
-//
-            dd($newFile);
-//                        dd($newFile);
+            ]);
 
-
-
-//            $newFile = File::query()->create([
-//                'file_url' => 'dsfdsf',
-//                'file_name' => $file->originalName,
-//                'file_size' =>,
-//                'file_size_type' =>,
-//                'file_type' =>,
-//                'status' =>
-//            ]);
-
+            return response()->json($newFile);
 
         } catch (Exception $exception) {
             $RESPONSE = [

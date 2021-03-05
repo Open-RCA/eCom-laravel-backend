@@ -9,6 +9,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductSubCategoryController;
 use App\Http\Controllers\FileController;
+use League\CommonMark\Inline\Element\Image;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -85,3 +87,4 @@ Route::group(['prefix' => 'products'], function () {
         Route::delete('', [ProductController::class, 'delete']);
     });
 });
+
