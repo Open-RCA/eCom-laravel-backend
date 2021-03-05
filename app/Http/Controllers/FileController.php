@@ -40,7 +40,7 @@ class FileController extends Controller
 //            dd($file->getFilename());
             $newFile = [
                 'file_url' => 'dsfdsf',
-                'file_name' => (string) Str::uuid(),
+                'file_name' => ((string) Str::uuid()) .  "." . $file->getExtension(),
                 'file_size_type' => 'B',
                 'file_size' => $file->getSize(),
                 'file_type' => $file->getExtension(),
