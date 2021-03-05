@@ -8,7 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductSubCategoryController;
-
+use App\Http\Controllers\FileController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -76,10 +76,11 @@ Route::group(['prefix' => 'product-sub-categories'], function () {
 
 
 Route::group(['prefix' => 'products'], function () {
-    Route::get('/', [ProductController::class, 'all']);
+    Route::get('/', [ProductController::class, 'all'])->name('Get Products');
     Route::post('/', [ProductController::class, 'create']);
     Route::group(['prefix' => '{product}'], function() {
         Route::get('', [ProductController::class, 'show']);
+        Route::post('/upload-file', [FileController::class, 'save'])->name('Save');
         Route::put('', [ProductController::class, 'edit']);
         Route::delete('', [ProductController::class, 'delete']);
     });

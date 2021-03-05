@@ -17,8 +17,7 @@ class ProductController extends Controller
         try {
             $products = Product::with('productSubCategory')->get();
             return response()->json($products);
-        }
-        catch (Exception $exception) {
+        } catch (Exception $exception) {
             $RESPONSE = [
                 'success' => false,
                 'message' => $exception->getMessage(),
@@ -32,8 +31,7 @@ class ProductController extends Controller
     {
         try {
             return response()->json($product);
-        }
-        catch (Exception $exception) {
+        } catch (Exception $exception) {
             $RESPONSE = [
                 'success' => false,
                 'message' => $exception->getMessage(),
@@ -44,13 +42,14 @@ class ProductController extends Controller
     }
 
 
-    public function create(Request $request): JsonResponse {
+    public function create(Request $request): JsonResponse
+    {
         try {
             $validator = Validator::make($request->json()->all(), [
                 'name' => 'required|string|min:1|max:50|unique:product_sub_categories',
                 'product_sub_category_id' => 'required|string|exists:product_categories,_id',
                 'unit_price' => 'required|numeric|min:1',
-                'quantity' => 'required|numeric|min:1',
+                'quantity' => 'required|numeric|min:1'
             ]);
 
             if ($validator->fails())
@@ -60,12 +59,12 @@ class ProductController extends Controller
                 'name' => $request->json()->get('name'),
                 'product_sub_category_id' => $request->json()->get('product_sub_category_id'),
                 'unit_price' => $request->json()->get('unit_price'),
-                'quantity' => $request->json()->get('quantity')
+                'quantity' => $request->json()->get('quantity'),
+                'status' => 'ACTIVE'
             ]);
 
             return response()->json($product);
-        }
-        catch (Exception $exception) {
+        } catch (Exception $exception) {
             $RESPONSE = [
                 'success' => false,
                 'message' => $exception->getMessage(),
@@ -98,8 +97,7 @@ class ProductController extends Controller
             ]);
 
             return response()->json($product);
-        }
-        catch (Exception $exception) {
+        } catch (Exception $exception) {
             $RESPONSE = [
                 'success' => false,
                 'message' => $exception->getMessage(),
@@ -109,6 +107,37 @@ class ProductController extends Controller
         }
     }
 
+
+    public function saveImage(Request $request, Product $product): JsonResponse
+    {
+        try {
+            $validator = Validator::make($request->json()->all(), [
+                'name' => 'required|string|min:1|max:50|unique:product_sub_categories',
+                'product_sub_category_id' => 'required|string|exists:product_categories,_id',
+                'unit_price' => 'required|numeric|min:1',
+                'quantity' => 'required|numeric|min:1',
+            ]);
+
+            if ($validator->fails())
+                return response()->json($validator->errors());
+
+            $product = Product::query()->create([
+                'name' => $request->json()->get('name'),
+                'product_sub_category_id' => $request->json()->get('product_sub_category_id'),
+                'unit_price' => $request->json()->get('unit_price'),
+                'quantity' => $request->json()->get('quantity')
+            ]);
+
+            return response()->json($product);
+        } catch (Exception $exception) {
+            $RESPONSE = [
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+            ];
+            return response()->json($RESPONSE);
+        }
+    }
 
     public function delete(Product $product): JsonResponse
     {

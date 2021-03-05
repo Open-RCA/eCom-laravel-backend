@@ -13,12 +13,12 @@ class Product extends Eloquent
         'name',
         'product_sub_category_id',
         'unit_price',
-        'quantity'
-    ];
-
-    protected $hidden = [
+        'quantity',
+        'images',
         'status'
     ];
+
+
     public $timestamps = true;
 
 //    public function productImages() {
