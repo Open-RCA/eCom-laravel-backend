@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\ProductSubCategory;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -26,6 +27,23 @@ class ProductSubCategoryController extends Controller
             return response()->json($RESPONSE);
         }
     }
+    public function getProducts(Product  $product): JsonResponse
+    {
+        try {
+            return response()->json($product::with('productSubCategory')->get());
+        }
+        catch (Exception $exception) {
+            $RESPONSE = [
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+            ];
+            return response()->json($RESPONSE);
+        }
+    }
+
+
+
 
     public function show(ProductSubCategory $productSubCategory): JsonResponse
     {

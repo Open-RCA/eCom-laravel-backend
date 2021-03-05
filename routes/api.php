@@ -65,6 +65,7 @@ Route::group(['prefix' => 'product-categories'], function () {
 Route::group(['prefix' => 'product-sub-categories'], function () {
     Route::get('/', [ProductSubCategoryController::class, 'all']);
     Route::post('/', [ProductSubCategoryController::class, 'create']);
+    Route::get('/products/{productSubCategory}', [ProductSubCategoryController::class, 'getProducts']);
     Route::group(['prefix' => '{productSubCategory}'], function() {
         Route::get('', [ProductSubCategoryController::class, 'show']);
         Route::put('', [ProductSubCategoryController::class, 'edit']);
