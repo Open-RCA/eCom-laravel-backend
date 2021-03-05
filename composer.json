@@ -15,7 +15,6 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "jenssegers/mongodb": "^3.8",
         "laravel/framework": "^8.12",
-        "laravel/telescope": "^4.4",
         "laravel/tinker": "^2.5",
         "tymon/jwt-auth": "dev-develop#34d8e48 as 1.0.0-rc.3.2"
     },
@@ -23,9 +22,9 @@
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "laravel/sail": "^1.0.1",
+        "laravel/telescope": "^4.4",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^5.0"
-
     },
     "config": {
         "optimize-autoloader": true,

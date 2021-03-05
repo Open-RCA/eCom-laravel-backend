@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
 
 class Product extends Eloquent
@@ -27,7 +26,7 @@ class Product extends Eloquent
 //    }
 
     public function productSubCategory() {
-        return $this->belongsTo(ProductSubCategory::class);
+        return $this->belongsTo(ProductCategory::class);
     }
 
 
