@@ -24,7 +24,11 @@ class ProductController extends Controller
               $productFiles = array();
               foreach ($product->images as $image) {
                   $file = File::query()->find($image);
-                  $productFile = array('id' => $image, 'file_path' => $file->file_url, 'file_url' => ($file->file_url));
+                  $domain  = (env('APP_MODE') == 'local') ? env('APP_DEV_URL'): env('APP_PROD_URL');
+                  $productFile = array(
+                      'id' => $image,
+                      'file_path' => $file->file_url,
+                      'file_url' => $domain . ($file->file_url));
                   array_push($productFiles, $productFile );
                 dd($productFiles);
 
