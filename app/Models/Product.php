@@ -18,6 +18,7 @@ class Product extends Eloquent
         'status'
     ];
 
+    protected $hidden = ['product_sub_category_id'];
 
     public $timestamps = true;
 
@@ -29,9 +30,6 @@ class Product extends Eloquent
         return $this->belongsTo(ProductCategory::class);
     }
 
-    public function productImages() {
-        return $this->hasMany(File::class);
-    }
 
 
 }

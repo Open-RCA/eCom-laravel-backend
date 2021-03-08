@@ -17,7 +17,7 @@ class ProductController extends Controller
     public function all(): JsonResponse
     {
         try {
-            $products = Product::with('productSubCategory', 'productImages')->get();
+            $products = Product::with('productSubCategory')->get();
 
 
           foreach ($products as $product) {
@@ -30,10 +30,9 @@ class ProductController extends Controller
                       'file_path' => $file->file_url,
                       'file_url' => $domain . ($file->file_url));
                   array_push($productFiles, $productFile );
-                dd($productFiles);
-
               }
 
+              $product->images = $productFiles;
           }
 
             return response()->json($products);
