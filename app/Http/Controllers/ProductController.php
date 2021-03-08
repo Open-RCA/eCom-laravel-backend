@@ -21,9 +21,13 @@ class ProductController extends Controller
 
 
           foreach ($products as $product) {
-              $found_images = array();
-              foreach ($product->productImages as $image) {
-                $got = array_push($found_images, 'dsfjka');
+              $productFiles = array();
+              foreach ($product->images as $image) {
+                  $file = File::query()->find($image);
+                  $productFile = array('id' => $image, 'file_path' => $file->file_url, 'file_url' => ($file->file_url));
+                  array_push($productFiles, $productFile );
+                dd($productFiles);
+
               }
 
           }
@@ -71,6 +75,7 @@ class ProductController extends Controller
                 'name' => $request->json()->get('name'),
                 'product_sub_category_id' => $request->json()->get('product_sub_category_id'),
                 'unit_price' => $request->json()->get('unit_price'),
+                'images' => array(),
                 'quantity' => $request->json()->get('quantity'),
                 'status' => 'ACTIVE'
             ]);
