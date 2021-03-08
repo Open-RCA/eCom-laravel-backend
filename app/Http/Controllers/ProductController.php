@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\File;
 use App\Models\Product;
+use Faker\Provider\Image;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -15,7 +17,17 @@ class ProductController extends Controller
     public function all(): JsonResponse
     {
         try {
-            $products = Product::with('productSubCategory')->get();
+            $products = Product::with('productSubCategory', 'productImages')->get();
+
+          foreach ($products as $product) {
+              echo ($product->name);
+              $product->productImages = array();
+              foreach ($product->images as $image) {
+                 array_push($product->productImages, File::find($image)->file_url);
+              }
+
+          }
+
             return response()->json($products);
         } catch (Exception $exception) {
             $RESPONSE = [
