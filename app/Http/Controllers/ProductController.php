@@ -17,24 +17,7 @@ class ProductController extends Controller
     public function all(): JsonResponse
     {
         try {
-            $products = Product::with('productSubCategory')->get();
-
-
-          foreach ($products as $product) {
-              $productFiles = array();
-              foreach ($product->images as $image) {
-                  $file = File::query()->find($image);
-                  $domain  = (env('APP_MODE') == 'development') ? env('APP_DEV_URL'): env('APP_PROD_URL');
-                  $productFile = array(
-                      'id' => $image,
-                      'file_path' => $file->file_url,
-                      'file_url' => $domain . ($file->file_url));
-                  array_push($productFiles, $productFile );
-              }
-
-              $product->images = $productFiles;
-          }
-
+            $products = $this->returnImages(Product::with('productSubCategory')->get(), true);
             return response()->json($products);
         } catch (Exception $exception) {
             $RESPONSE = [
@@ -46,9 +29,45 @@ class ProductController extends Controller
         }
     }
 
+    private function returnImages($products, $many=false) {
+        $productFiles = array();
+        if ($many) {
+            foreach ($products as $product) {
+                $productFiles = array();
+                foreach ($product->images as $image) {
+                    $file = File::query()->find($image);
+                    $domain = (env('APP_MODE') == 'development') ? env('APP_DEV_URL') : env('APP_PROD_URL');
+                    $productFile = array(
+                        'id' => $image,
+                        'file_path' => $file->file_url,
+                        'file_url' => $domain . ($file->file_url));
+                    array_push($productFiles, $productFile);
+                }
+                $product->images = $productFiles;
+            }
+            return $products;
+        }
+        else {
+            $product = $products;
+                foreach ($product->images as $image) {
+                    $file = File::query()->find($image);
+                    $domain = (env('APP_MODE') == 'development') ? env('APP_DEV_URL') : env('APP_PROD_URL');
+                    $productFile = array(
+                        'id' => $image,
+                        'file_path' => $file->file_url,
+                        'file_url' => $domain . ($file->file_url));
+                    array_push($productFiles, $productFile);
+                }
+                $product->images = $productFiles;
+            }
+            return $products;
+    }
     public function show(Product $product): JsonResponse
     {
         try {
+
+            $product = Product::with('productSubCategory')->find($product->id);
+            $product = $this->returnImages($product);
             return response()->json($product);
         } catch (Exception $exception) {
             $RESPONSE = [
