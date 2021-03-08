@@ -19,11 +19,11 @@ class ProductController extends Controller
         try {
             $products = Product::with('productSubCategory', 'productImages')->get();
 
+
           foreach ($products as $product) {
-              echo ($product->name);
-              $product->productImages = array();
-              foreach ($product->images as $image) {
-                 array_push($product->productImages, File::find($image)->file_url);
+              $found_images = array();
+              foreach ($product->productImages as $image) {
+                $got = array_push($found_images, 'dsfjka');
               }
 
           }
@@ -161,7 +161,15 @@ class ProductController extends Controller
     public function delete(Product $product): JsonResponse
     {
         try {
-            return response()->json($product->delete());
+            if ($product->delete()) {
+                $RESPONSE = [
+                    'success' => true,
+                    'message' => 'Deleted Successfully',
+                    'status' => JsonResponse::HTTP_OK
+                ];
+            return response()->json($RESPONSE);
+            }
+
         } catch (Exception $exception) {
             $RESPONSE = [
                 'success' => false,
