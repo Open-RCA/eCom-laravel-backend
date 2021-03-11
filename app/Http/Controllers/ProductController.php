@@ -18,6 +18,7 @@ class ProductController extends Controller
             $products = $this->returnImages(Product::with('productSubCategory')->get(), true);
             return response()->json($products);
         } catch (Exception $exception) {
+            dd($exception);
             $RESPONSE = [
                 'success' => false,
                 'message' => $exception->getMessage(),
@@ -34,6 +35,7 @@ class ProductController extends Controller
                 $productFiles = array();
                 foreach ($product->images as $image) {
                     $file = File::query()->find($image);
+
                     $domain = (env('APP_MODE') == 'development') ? env('APP_DEV_URL') : env('APP_PROD_URL');
                     $productFile = array(
                         'id' => $image,
