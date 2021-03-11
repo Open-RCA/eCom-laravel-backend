@@ -2,65 +2,212 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\File;
 use App\Models\Product;
-use Exception;
+use Faker\Provider\Image;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Exception;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
+
     public function all(): JsonResponse
     {
-
-        return response()->json(Product::all());
+        try {
+            $products = $this->returnImages(Product::with('productSubCategory')->get(), true);
+            return response()->json($products);
+        } catch (Exception $exception) {
+            $RESPONSE = [
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+            ];
+            return response()->json($RESPONSE);
+        }
     }
 
+    private function returnImages($products, $many=false) {
+        $productFiles = array();
+        if ($many) {
+            foreach ($products as $product) {
+                $productFiles = array();
+                foreach ($product->images as $image) {
+                    $file = File::query()->find($image);
+                    $domain = (env('APP_MODE') == 'development') ? env('APP_DEV_URL') : env('APP_PROD_URL');
+                    $productFile = array(
+                        'id' => $image,
+                        'file_path' => $file->file_url,
+                        'file_url' => $domain . ($file->file_url));
+                    array_push($productFiles, $productFile);
+                }
+                $product->images = $productFiles;
+            }
+            return $products;
+        }
+        else {
+            $product = $products;
+                foreach ($product->images as $image) {
+                    $file = File::query()->find($image);
+                    $domain = (env('APP_MODE') == 'development') ? env('APP_DEV_URL') : env('APP_PROD_URL');
+                    $productFile = array(
+                        'id' => $image,
+                        'file_path' => $file->file_url,
+                        'file_url' => $domain . ($file->file_url));
+                    array_push($productFiles, $productFile);
+                }
+                $product->images = $productFiles;
+            }
+            return $products;
+    }
     public function show(Product $product): JsonResponse
     {
-        return response()->json($product);
+        try {
+
+            $product = Product::with('productSubCategory')->find($product->id);
+            $product = $this->returnImages($product);
+            return response()->json($product);
+        } catch (Exception $exception) {
+            $RESPONSE = [
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+            ];
+            return response()->json($RESPONSE);
+        }
     }
 
-    public function create(Request $request){
-        $valid = Validator::make($request->json()->all(), [
-            'name' => 'required|string|min:3',
-            'description' => 'required|string|min:10'
-        ]);
 
-        if($valid->fails()) return response()->json($valid->errors(), 400);
+    public function create(Request $request): JsonResponse
+    {
+        try {
+            $validator = Validator::make($request->json()->all(), [
+                'name' => 'required|string|min:1|max:50|unique:product_sub_categories',
+                'product_sub_category_id' => 'required|string|exists:product_categories,_id',
+                'unit_price' => 'required|numeric|min:1',
+                'quantity' => 'required|numeric|min:1'
+            ]);
 
-        $product = Product::query()->create([
-            'name' => $request->json()->get('name'),
-            'description' => $request->json()->get('description'),
-        ]);
+            if ($validator->fails())
+                return response()->json($validator->errors());
 
-        if(!$product) return response()->json(['message' => 'Failed to create a product'], 500);
-        return response()->json($product);
+            $product = Product::query()->create([
+                'name' => $request->json()->get('name'),
+                'product_sub_category_id' => $request->json()->get('product_sub_category_id'),
+                'unit_price' => $request->json()->get('unit_price'),
+                'images' => array(),
+                'quantity' => $request->json()->get('quantity'),
+                'status' => 'ACTIVE'
+            ]);
+
+            return response()->json($product);
+        } catch (Exception $exception) {
+            $RESPONSE = [
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+            ];
+            return response()->json($RESPONSE);
+        }
+
     }
 
-    public function edit(Product $product, Request $request){
-        $valid = Validator::make($request->json()->all(), [
-            'name' => 'required|string|min:3',
-            'description' => 'required|string|min:10'
-        ]);
 
-        if($valid->fails()) return response()->json($valid->errors(), 400);
+    public function update(Request $request, Product $product): JsonResponse
+    {
+        try {
+            $validator = Validator::make($request->json()->all(), [
+                'name' => 'required|string|min:1|max:50|unique:product_sub_categories',
+                'product_sub_category_id' => 'required|string|exists:product_categories,_id',
+                'unit_price' => 'required|numeric|min:1',
+                'quantity' => 'required|numeric|min:1',
+            ]);
 
-        $product = $product->update([
-            'name' => $request->json()->get('name'),
-            'description' => $request->json()->get('description'),
-        ]);
+            if ($validator->fails())
+                return response()->json($validator->errors());
 
-        if(!$product) return response()->json(['message' => 'Failed to create a product'], 500);
-        return response()->json(["message" => "Updated the product successfully"]);
+            $product = Product::query()->create([
+                'name' => $request->json()->get('name'),
+                'product_sub_category_id' => $request->json()->get('product_sub_category_id'),
+                'unit_price' => $request->json()->get('unit_price'),
+                'quantity' => $request->json()->get('quantity')
+            ]);
+
+            return response()->json($product);
+        } catch (Exception $exception) {
+            $RESPONSE = [
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+            ];
+            return response()->json($RESPONSE);
+        }
     }
 
+
+    public function saveProductImage(Request $request, Product $product): JsonResponse {
+        try {
+            $file = $request->only('file');
+            if (empty($file)){
+                $RESPONSE = [
+                    'success' => false,
+                    'message' => 'File not found',
+                    'status' => JsonResponse::HTTP_BAD_REQUEST
+                ];
+                return response()->json($RESPONSE);
+            }
+
+
+            $validator = Validator::make($file, [
+                'file' => 'required|mimes:jpeg,jpg,png,gif|max:2048'
+            ]);
+
+            if ($validator->fails())
+                return response()->json($validator->errors());
+
+
+            $file = $file['file'];
+            $savedFile = (new FileController)->save($file);
+
+            $product->push('images', $savedFile->_id);
+
+            $product->save();
+            return response()->json($product);
+
+        } catch (Exception $exception) {
+            $RESPONSE = [
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+            ];
+            return response()->json($RESPONSE);
+        }
+    }
     public function delete(Product $product): JsonResponse
     {
         try {
-            return response()->json($product->delete());
-        } catch (Exception $e) {
-            return response()->json(['message' => 'Failed to delete the product'], 500);
+            if ($product->delete()) {
+                $RESPONSE = [
+                    'success' => true,
+                    'message' => 'Deleted Successfully',
+                    'status' => JsonResponse::HTTP_OK
+                ];
+            return response()->json($RESPONSE);
+            }
+
+        } catch (Exception $exception) {
+            $RESPONSE = [
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+            ];
+            return response()->json($RESPONSE);
         }
     }
+
+
+
+
 }

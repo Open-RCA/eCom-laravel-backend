@@ -9,6 +9,8 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductSubCategoryController;
+use App\Http\Controllers\FileController;
+use League\CommonMark\Inline\Element\Image;
 
 /*
 |--------------------------------------------------------------------------
@@ -80,9 +82,24 @@ Route::group(['prefix' => 'product-categories'], function () {
 Route::group(['prefix' => 'product-sub-categories'], function () {
     Route::get('/', [ProductSubCategoryController::class, 'all']);
     Route::post('/', [ProductSubCategoryController::class, 'create']);
+    Route::get('/products/{productSubCategory}', [ProductSubCategoryController::class, 'getProducts']);
     Route::group(['prefix' => '{productSubCategory}'], function() {
         Route::get('', [ProductSubCategoryController::class, 'show']);
         Route::put('', [ProductSubCategoryController::class, 'edit']);
         Route::delete('', [ProductSubCategoryController::class, 'delete']);
     });
 });
+
+
+
+Route::group(['prefix' => 'products'], function () {
+    Route::get('/', [ProductController::class, 'all'])->name('Get Products');
+    Route::post('/', [ProductController::class, 'create']);
+    Route::group(['prefix' => '{product}'], function() {
+        Route::get('', [ProductController::class, 'show']);
+        Route::post('/upload-file', [ProductController::class, 'saveProductImage'])->name('Save');
+        Route::put('', [ProductController::class, 'edit']);
+        Route::delete('', [ProductController::class, 'delete']);
+    });
+});
+
