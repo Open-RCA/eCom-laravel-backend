@@ -74,4 +74,7 @@ class User extends Eloquent implements AuthenticatableContract, AuthorizableCont
         return [];
     }
 
+    public function roles(){
+        return $this->belongsToMany('App\Models\Role');
+    }
 }
