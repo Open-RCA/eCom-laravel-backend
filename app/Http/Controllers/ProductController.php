@@ -155,14 +155,10 @@ class ProductController extends Controller
 
     public function saveProductImage(Request $request, Product $product): JsonResponse {
         try {
-            $validator = Validator::make($request->json()->all(), [
-                'colors.*' => 'string|distinct|min:1'
-            ]);
-
-            if ($validator->fails())
-                return response()->json($validator->errors());
 
             $file = $request->only('file');
+            $color = $request->only('color');
+
             if (empty($file)){
                 $RESPONSE = [
                     'success' => false,
@@ -173,18 +169,22 @@ class ProductController extends Controller
             }
 
 
-            $validator = Validator::make($file, [
+            $fileValidator = Validator::make($file, [
                 'file' => 'required|mimes:jpeg,jpg,png,gif|max:2048'
             ]);
 
-            if ($validator->fails())
-                return response()->json($validator->errors());
+            $colorValidator = Validator::make($color, [
+                'color' => 'string|min:3|regex:/^(#(?:[0-9a-f]{2}){2,4}|#[0-9a-f]{3}|(?:rgba?|hsla?)\((?:\d+%?(?:deg|rad|grad|turn)?(?:,|\s)+){2,3}[\s\/]*[\d\.]+%?\))$/i',
+            ]);
+
+            if ($fileValidator->fails() || $colorValidator->fails())
+                return response()->json(['file' => $fileValidator->errors(), 'color' => $colorValidator->errors()]);
 
 
             $file = $file['file'];
             $savedFile = (new FileController)->save($file);
 
-            $image = array('file' => $savedFile->id, 'colors' => $request->json()->get('colors'));
+            $image = array('file' => $savedFile->id, 'color' => $request->json()->get('color'));
 
             $product->push('images', $image);
 
