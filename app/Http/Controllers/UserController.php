@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Role;
 use Validator;
 
 
@@ -22,6 +23,16 @@ class UserController extends Controller
     }
 
     /**
+     * Get all users
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function all()
+    {
+        return response()->json(User::all());
+    }
+
+    /**
      * Register a User.
      * 
      * @return \Illuminate\Http\JsonResponse
@@ -34,23 +45,33 @@ class UserController extends Controller
         * @return \Illuminate\Http\JsonResponse
         */
          
-        $validator = Validator::make($request->all(), [
+        $validator = Validator::make($request->json()->all(), [
              'first_name' => 'required|string|between:3,255',
              'last_name' => 'required|string|between:3,255',
              'username' => 'required|string|between:3,255',
              'email' => 'required|string|email|max:255|unique:users',
-             'phone_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
              'password' => 'required|string|confirmed|min:8',
+             'phone_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+             'roles' => 'required|array'
         ]);
 
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
         }
 
+        
+        Role::query()->findOrFail($request->json()->get("roles"));
+
         $user = User::create(array_merge(
             $validator->validated(),
             ['password' => bcrypt($request->password)]
         ));
+
+        $user->roles()->attach($request->json()->get("roles"));
+
+        if(!$user) return response()->json([
+            'message' => 'Failed to create user'
+        ], 500);
 
         return response()->json([
             'message' => 'User registered successfully',
@@ -78,7 +99,7 @@ class UserController extends Controller
         if($validator->fails()){
             return response()->json($validator->errors(), 422);
         }
-        
+
         if(!$token = auth('api')->attempt($validator->validate())){
             return response()->json(['error' => 'Unauthorized'], 401);
         }

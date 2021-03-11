@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\RoleController;
 
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductCategoryController;
@@ -28,15 +29,29 @@ use League\CommonMark\Inline\Element\Image;
 
 Route::group([
     'middleware' => 'api',
+    'prefix'=>'roles'
+], function(){
+    Route::get('/', [RoleController::class, 'all']);
+    Route::post('/', [RoleController::class, 'create'])->middleware('isAdmin');
+    Route::group(['prefix' => '{role}'], function(){
+        Route::put('', [RoleController::class, 'edit'])->middleware('isAdmin');
+        Route::delete('', [RoleController::class, 'delete'])->middleware('isAdmin');
+    });
+});
+
+Route::group([
+    'middleware' => 'api',
     'prefix' => 'auth'
-], function($router){
+], function(){
     Route::post('/login', [UserController::class, 'login']);
     Route::post('/register', [UserController::class, 'register']);
     Route::post('/logout', [UserController::class, 'logout']);
     Route::post('/refresh', [UserController::class, 'refresh']);
     Route::get('/currentUser', [UserController::class, 'currentUser']);
-    Route::post('/{user}', [UserController::class, 'update']);
-    Route::post('/{user}', [UserController::class, 'delete']);
+    Route::group(['prefix' => '{user}'], function(){
+        Route::put('', [UserController::class, 'update']);
+        Route::delete('', [UserController::class, 'delete']);
+    });
 });
 
 Route::group(['prefix' => 'products'], function () {

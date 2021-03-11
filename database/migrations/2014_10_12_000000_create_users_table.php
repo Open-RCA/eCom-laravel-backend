@@ -20,8 +20,9 @@ class CreateUsersTable extends Migration
             
             $table->string('first_name');
             $table->string('last_name');
-            
-            // $table->foreign('user_category')->references('_id')->on('user_categories')->onDelete('cascade');
+
+            // $table->unsignedInteger('role_id')->index();
+            // $table->foreign('role_id')->references('_id')->on('roles')->onDelete('cascade');
 
             $table->string('phone_number');
             $table->string('password');
