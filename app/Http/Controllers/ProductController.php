@@ -155,6 +155,13 @@ class ProductController extends Controller
 
     public function saveProductImage(Request $request, Product $product): JsonResponse {
         try {
+            $validator = Validator::make($request->json()->all(), [
+                'colors.*' => 'string|distinct|min:1'
+            ]);
+
+            if ($validator->fails())
+                return response()->json($validator->errors());
+
             $file = $request->only('file');
             if (empty($file)){
                 $RESPONSE = [
@@ -177,7 +184,9 @@ class ProductController extends Controller
             $file = $file['file'];
             $savedFile = (new FileController)->save($file);
 
-            $product->push('images', $savedFile->_id);
+            $image = array('file' => $savedFile->id, 'colors' => $request->json()->get('colors'));
+
+            $product->push('images', $image);
 
             $product->save();
             return response()->json($product);
