@@ -86,7 +86,6 @@ class ProductController extends Controller
                 'product_sub_category_id' => 'required|string|exists:product_categories,_id',
                 'unit_price' => 'required|numeric|min:1',
                 "sizes.*"  => "numeric|distinct|min:1",
-                "colors.*"  => "string|distinct|min:1",
                 'description' => 'required|string|min:10',
                 'quantity' => 'required|numeric|min:1'
             ]);
@@ -100,7 +99,6 @@ class ProductController extends Controller
                 'product_sub_category_id' => $request->json()->get('product_sub_category_id'),
                 'unit_price' => $request->json()->get('unit_price'),
                 'images' => array(),
-                'colors' => $request->json()->get('colors'),
                 'sizes' => $request->json()->get('sizes'),
                 'quantity' => $request->json()->get('quantity'),
                 'status' => 'ACTIVE'
@@ -127,7 +125,6 @@ class ProductController extends Controller
                 'product_sub_category_id' => 'required|string|exists:product_categories,_id',
                 'unit_price' => 'required|numeric|min:1',
                 "sizes.*"  => "numeric|distinct|min:1",
-                "colors.*"  => "string|distinct|min:1",
                 'description' => 'required|string|min:10',
                 'quantity' => 'required|numeric|min:1',
             ]);
@@ -140,7 +137,6 @@ class ProductController extends Controller
                 'description' => $request->json()->get('description'),
                 'product_sub_category_id' => $request->json()->get('product_sub_category_id'),
                 'unit_price' => $request->json()->get('unit_price'),
-                'colors' => $request->json()->get('colors'),
                 'sizes' => $request->json()->get('sizes'),
                 'quantity' => $request->json()->get('quantity')
             ]);

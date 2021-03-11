@@ -17,7 +17,6 @@ class Product extends Eloquent
         'quantity',
         'images',
         'sizes',
-        'colors',
         'status'
     ];
 
