@@ -85,6 +85,7 @@ class ProductController extends Controller
                 'name' => 'required|string|min:1|max:50|unique:product_sub_categories',
                 'product_sub_category_id' => 'required|string|exists:product_categories,_id',
                 'unit_price' => 'required|numeric|min:1',
+                'description' => 'required|string|min:10',
                 'quantity' => 'required|numeric|min:1'
             ]);
 
@@ -93,6 +94,7 @@ class ProductController extends Controller
 
             $product = Product::query()->create([
                 'name' => $request->json()->get('name'),
+                'description' => $request->json()->get('description'),
                 'product_sub_category_id' => $request->json()->get('product_sub_category_id'),
                 'unit_price' => $request->json()->get('unit_price'),
                 'images' => array(),
@@ -120,6 +122,7 @@ class ProductController extends Controller
                 'name' => 'required|string|min:1|max:50|unique:product_sub_categories',
                 'product_sub_category_id' => 'required|string|exists:product_categories,_id',
                 'unit_price' => 'required|numeric|min:1',
+                'description' => 'required|string|min:10',
                 'quantity' => 'required|numeric|min:1',
             ]);
 
@@ -128,6 +131,7 @@ class ProductController extends Controller
 
             $product = Product::query()->create([
                 'name' => $request->json()->get('name'),
+                'description' => $request->json()->get('description'),
                 'product_sub_category_id' => $request->json()->get('product_sub_category_id'),
                 'unit_price' => $request->json()->get('unit_price'),
                 'quantity' => $request->json()->get('quantity')
