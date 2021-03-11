@@ -184,7 +184,7 @@ class ProductController extends Controller
             $file = $file['file'];
             $savedFile = (new FileController)->save($file);
 
-            $image = array('file' => $savedFile->id, 'color' => $request->json()->get('color'));
+            $image = array('file' => $savedFile->id, 'color' => $color['color']);
 
             $product->push('images', $image);
 
