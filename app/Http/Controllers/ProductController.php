@@ -174,7 +174,7 @@ class ProductController extends Controller
             ]);
 
             $colorValidator = Validator::make($color, [
-                'color' => 'string|min:3|regex:/^(#(?:[0-9a-f]{2}){2,4}|#[0-9a-f]{3}|(?:rgba?|hsla?)\((?:\d+%?(?:deg|rad|grad|turn)?(?:,|\s)+){2,3}[\s\/]*[\d\.]+%?\))$/i',
+                'color' => ['string', 'min:3' , 'regex:/^(#(?:[0-9a-f]{2}){2,4}|#[0-9a-f]{3}|(?:rgba?|hsla?)\((?:\d+%?(?:deg|rad|grad|turn)?(?:,|\s)+){2,3}[\s\/]*[\d\.]+%?\))$/i'],
             ]);
 
             if ($fileValidator->fails() || $colorValidator->fails())
