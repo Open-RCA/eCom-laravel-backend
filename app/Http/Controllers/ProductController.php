@@ -188,6 +188,7 @@ class ProductController extends Controller
 
             $image = array('file' => $savedFile->id, 'color' => $color['color']);
 
+
             $product->push('images', $image);
 
             $product->save();
