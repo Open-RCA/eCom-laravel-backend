@@ -4,12 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\File;
 use App\Models\Product;
-use Faker\Provider\Image;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Exception;
-use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
