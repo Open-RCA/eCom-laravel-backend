@@ -16,6 +16,8 @@ class Product extends Eloquent
         'unit_price',
         'quantity',
         'images',
+        'sizes',
+        'colors',
         'status'
     ];
 
