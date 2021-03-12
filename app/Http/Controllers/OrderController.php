@@ -18,9 +18,25 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index():JsonResponse
+    public function all():JsonResponse
     {
-       
+       return response()->json(Order::all());
+    }
+
+    public function getProductsOrder(Order $order):JsonResponse{
+        try {
+            return response()->json($order::with('products')->get());
+        } catch (Exception $th) {
+            //throw $th;
+
+            $RESPONSE = [
+                'success' => false,
+                'message' => $th->getMessage(),
+                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR 
+            ];
+
+            return response()->json($RESPONSE);
+        }
     }
 
     
@@ -30,9 +46,53 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        try {
+         $validator = Validator::make($request->json()->all(), [
+
+            'user_id'=>'required|string|exists:users,_id',
+            'address'=>'required|string|min:1|max:255',
+            'city'=>'required|string|min:1|max:255',
+            'country'=>'required|string|min:1|max:255',
+            'phone_number'=>'required|string|min:1|max:20',
+            'items' => 'required|array',
+            'items.*.product_id' => 'required|string|exists:products,_id',
+            'items.*.quantity' => 'required|integer|min:0'
+         ]);
+
+         
+
+         if($validator->fails())
+             return response()->json($validator->errors(), 400);
+
+             $order = Order::query()->create([
+                 'user_id'=>$request->json()->get('user_id'),
+                 'address'=>$request->json()->get('address'),
+                 'city'=>$request->json()->get('city'),
+                 'country'=>$request->json()->get('country'),
+                 'phone_number'=>$request->json()->get('phone_number')
+             ]);
+             
+             $order->items()->createMany($request->json()->get("items"));
+
+             $order->items;
+
+             return response()->json($order);
+
+        } catch (Exception $th) {
+            $RESPONSE = [
+                'success' => false,
+                'message' => $th->getMessage(),
+                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+            ];
+
+            return response()-json($RESPONSE);
+
+            //throw $th;
+        }
         //
+        
     }
 
     /**
@@ -54,7 +114,16 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        //
+    try {
+        return response()->json($order);
+    } catch (Exception $th) {
+        $RESPONSE = [
+            'success' => false,
+            'message' => $th->getMessage(),
+            'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+        ];
+        return response()->json($RESPONSE);
+    }
     }
 
     /**
@@ -77,7 +146,39 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order)
     {
-        //
+        try {
+            $validator = Validator::make($request->json()->all(),[
+                'user_id'=>'required|string|exists:users,_id',
+                'address'=>'required|string|min:1|max:255',
+                'city'=>'required|string|min:1|max:255',
+                'country'=>'required|string|min:1|max:255',
+                'phone_number'=>'required|string|min:1|max:20',
+                'items' => 'required|array',
+                'items.*.product_id' => 'required|string|exists:products,_id',
+                'items.*.quantity' => 'required|integer|min:0'
+            ]);
+            if($validator->fails())
+            return response()->json($validator->errors());
+
+            $order = Order::query()->update([
+                'user_id'=>$request->json()->get('user_id'),
+                'address'=>$request->json()->get('address'),
+                'city'=>$request->json()->get('city'),
+                'country'=>$request->json()->get('country'),
+                'phone_number'=>$request->json()->get('phone_number')
+            ]);
+            return response()->json($order);
+
+        } catch (Exception $th) {
+            //throw $th;
+            $RESPONSE = [
+                'success'=>false,
+                'message'=>$th->getMessage(),
+                'status'=>JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+            ];
+            return responde()->json($RESPONSE);
+
+        }
     }
 
     /**
@@ -86,8 +187,12 @@ class OrderController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Order $order)
+    public function delete(Order $order)
     {
-        //
+        try {
+            return response()->json($order->delete());
+        } catch (Exception $th) {
+           return response()->json(['message' => 'Failed to cancel your order'], 500);
+        }
     }
 }

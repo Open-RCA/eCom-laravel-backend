@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductSubCategoryController;
 use App\Http\Controllers\FileController;
@@ -88,3 +89,15 @@ Route::group(['prefix' => 'products'], function () {
     });
 });
 
+
+Route::group(['prefix'=>'orders'],function(){
+    Route::get("/", [OrderController::class, "all"]);
+    Route::post("/", [OrderController::class,"create"]);
+    Route::get('/products/{order}', [OrderController::class, 'getProductsOrder']);
+    Route::group(["prefix"=> '{order}'], function(){
+        Route::get('',[OrderController::class, "show"]);
+        Route::put('',[OrderController::class, "update"]);
+        Route::delete('',[OrderController::class, "delete"]);
+    });
+
+});

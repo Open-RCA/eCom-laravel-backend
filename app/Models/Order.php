@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Jenssegers\Mongodb\Eloquent\Model;
 
 class Order extends Model
 {
@@ -15,7 +15,7 @@ class Order extends Model
         'user_id',
         'status',
         'total',
-        'item_count',
+        // 'item_count',
         'address',
         'city',
         'country',
@@ -29,7 +29,7 @@ class Order extends Model
     }
 
     public function items(){
-        return $this->hasMany(order_items::class);
+        return $this->hasMany(OrderItem::class);
     }
 
 }
