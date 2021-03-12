@@ -18,7 +18,7 @@ class CreateOrdersTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->enum('status',['pending','completed','decline'])->default('pending');
             $table->decimal('total',20,6);
-            $table->unsignedBigInteger('item_count');
+            // $table->unsignedBigInteger('item_count');
             $table->string('address');
             $table->string('city');
             $table->string('country');
