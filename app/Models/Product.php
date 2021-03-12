@@ -11,13 +11,16 @@ class Product extends Eloquent
 
     protected $fillable = [
         'name',
+        'description',
         'product_sub_category_id',
         'unit_price',
         'quantity',
         'images',
+        'sizes',
         'status'
     ];
 
+    protected $hidden = ['product_sub_category_id'];
 
     public $timestamps = true;
 
@@ -28,6 +31,7 @@ class Product extends Eloquent
     public function productSubCategory() {
         return $this->belongsTo(ProductCategory::class);
     }
+
 
 
 }

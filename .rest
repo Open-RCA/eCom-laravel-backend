@@ -1,9 +1,9 @@
-GET http://localhost:8000/api/product-sub-categories/products/603885b976690000580050d6
+GET http://localhost:8000/api/products
 
 
 ###
 
-GET http://localhost:8000/api/product-categories/603877d676690000580050b8
+DELETE http://localhost:8000/api/products/604a1a48606800004c000ce3
 
 ###
 
@@ -13,6 +13,8 @@ Content-Type: application/json
 {
     "name": "product",
     "product_sub_category_id": "603885b976690000580050d6",
+    "description": "This is a product",
+    "sizes": [23, 2],
     "quantity": 4,
     "unit_price": 4000
 }

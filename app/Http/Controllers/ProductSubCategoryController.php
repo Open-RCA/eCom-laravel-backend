@@ -65,6 +65,7 @@ class ProductSubCategoryController extends Controller
         try {
             $validator = Validator::make($request->json()->all(), [
                 'category' => 'required|string|min:1|max:50|unique:product_sub_categories',
+
                 'product_category_id' => 'required|string|exists:product_categories,_id',
                 'description' => 'required|string|min:1|max:50'
             ]);
